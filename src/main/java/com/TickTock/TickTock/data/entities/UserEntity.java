@@ -2,7 +2,6 @@ package com.TickTock.TickTock.data.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jdk.jfr.Timestamp;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Table(name = "users")
 public class UserEntity {
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Feliz Cumpleaños</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; color: #333; text-align: center; padding: 30px; }
+        .card { background-color: #ffffff; border-radius: 15px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-block; max-width: 600px; }
+        h1 { color: #e91e63; font-size: 32px; }
+        h2 { color: #3f51b5; margin-top: 20px; }
+        p { font-size: 18px; margin-top: 20px; }
+        .emoji { font-size: 40px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="emoji">🎉🎂🥳</div>
+    <h1>¡Hoy es tu cumpleaños!</h1>
+    <h2>Feliz cumpleaños, <span style="color: #ff5722;" th:text="${username}">[Username]</span>!</h2>
+    <p>Hoy estás cumpliendo <strong th:text="${age}">[Age]</strong> años. Te deseamos un día increíble lleno de alegría, amor y muchas sonrisas. 🎈</p>
+</div>
+</body>
+</html>
