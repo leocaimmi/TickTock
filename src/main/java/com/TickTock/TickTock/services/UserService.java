@@ -5,6 +5,7 @@ import com.TickTock.TickTock.data.dtos.response.UserResponse;
 import com.TickTock.TickTock.data.entities.UserEntity;
 import com.TickTock.TickTock.data.mappers.UserMapper;
 import com.TickTock.TickTock.data.repositories.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,9 @@ public class UserService {
      *
      * @return true if there are users with birthdays today, false otherwise
      */
-    @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
+    @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
     @Transactional
-    public boolean notifyBirthday() {
+    public boolean notifyUserBirthday() {
         int day = LocalDate.now().getDayOfMonth();
         int month = LocalDate.now().getMonthValue();
 
@@ -54,16 +55,29 @@ public class UserService {
 
         // for each user, send a birthday email
         birthdayUsers.forEach(user -> {
-            emailService.sendBirthdayEmail(
-                    user.getEmail(),
-                    user.getUsername(),
-                    user.getBornDate()
-            );
+            try {
+                System.out.println(user);
+                emailService.sendBirthdayEmail(
+                        user.getEmail(),
+                        user.getUsername(),
+                        user.getBornDate()
+                );
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
         });
 
 
         return !birthdayUsers.isEmpty();
     }
 
-
+    /**
+     * Get all users.
+     *
+     * @return a list of user responses
+     */
+    public List<UserResponse> getAllUsers() {
+        return userMapper.toModelList(userRepository.findAll());
+    }
 }
