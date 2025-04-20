@@ -17,7 +17,10 @@
     <div class="emoji">🎉🎂🥳</div>
     <h1>¡Hoy es tu cumpleaños!</h1>
     <h2>Feliz cumpleaños, <span style="color: #ff5722;" th:text="${username}">[Username]</span>!</h2>
-    <p>Hoy estás cumpliendo <strong th:text="${age}">[Age]</strong> años. Te deseamos un día increíble lleno de alegría, amor y muchas sonrisas. 🎈</p>
+    <p>
+        Hoy estás cumpliendo <strong th:text="${age}">[Age]</strong> años.
+        <span th:text="${phrase}">[Phrase]</span> 🎈
+    </p>
 </div>
 </body>
 </html>
