@@ -1,9 +1,12 @@
 package com.TickTock.TickTock.services;
 
 import com.TickTock.TickTock.data.dtos.request.UserRequest;
+import com.TickTock.TickTock.data.dtos.response.BirthdayResponse;
 import com.TickTock.TickTock.data.dtos.response.UserResponse;
 import com.TickTock.TickTock.data.entities.UserEntity;
+import com.TickTock.TickTock.data.mappers.BirthdayMapper;
 import com.TickTock.TickTock.data.mappers.UserMapper;
+import com.TickTock.TickTock.data.repositories.BirthdayRepository;
 import com.TickTock.TickTock.data.repositories.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,18 +17,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BirthdayMapper birthdayMapper;
     private final EmailService emailService;
-
+    private final BirthdayRepository birthdayRepository;
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper, EmailService emailService) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, BirthdayMapper birthdayMapper, EmailService emailService, BirthdayRepository birthdayRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.birthdayMapper = birthdayMapper;
         this.emailService = emailService;
+        this.birthdayRepository = birthdayRepository;
     }
 
     /**
@@ -38,7 +46,42 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(userMapper.toEntity(userRequest)));
     }
 
+    /**
+     * Get a list of users with birthdays in the current month and send birthday emails.
+     * This method is scheduled to run on the first day of each month at midnight.
+     *
+     * @param userId the ID of the user to send birthday emails to
+     * @return a list of birthday responses for the specified user
+     */
+    //@Scheduled(cron = "0 0 0 1 * ?") // A las 00:00 del día 1 de cada mes
+    @Transactional
+    public List<BirthdayResponse> getBirthdayUsers(Long userId) {
+        int month = LocalDate.now().getMonthValue();
 
+        List<BirthdayResponse> birthdayList = birthdayMapper
+                .toModelList(birthdayRepository.findBirthdaysGroupedByUserInMonth(month));
+
+        Map<Long, List<BirthdayResponse>> grouped = birthdayList.stream()
+                .collect(Collectors.groupingBy(BirthdayResponse::getUserId));
+
+        grouped.entrySet()
+                .forEach(entry -> {
+
+                    UserEntity user = userRepository.findById(entry.getKey())
+                            .orElseThrow(() -> new EntityNotFoundException("User "+entry.getKey()+" not found"));
+
+                    List<BirthdayResponse> birthdayResponses = entry.getValue();
+                    try {
+                        emailService.sendBirthdayListEmail(user.getEmail(), user.getUsername(), birthdayResponses);
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
+
+        return grouped.get(userId);
+    }
     /**
      * Notify users with birthdays today by sending birthday emails.
      * This method is scheduled to run every day at midnight.
@@ -58,7 +101,7 @@ public class UserService {
         birthdayUsers.forEach(user -> {
             try {
                 System.out.println(user);
-                emailService.sendBirthdayEmail(
+                emailService.sendBirthdayEmailUser(
                         user.getEmail(),
                         user.getUsername(),
                         user.getBornDate()

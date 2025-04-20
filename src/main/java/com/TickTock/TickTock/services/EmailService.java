@@ -1,5 +1,6 @@
 package com.TickTock.TickTock.services;
 
+import com.TickTock.TickTock.data.dtos.response.BirthdayResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 
 @Service
@@ -51,9 +53,9 @@ public class EmailService {
      * @param username  the name of the user
      * @param birthDate the birth date of the user
      */
-    public void sendBirthdayEmail(String email, String username, LocalDate birthDate) throws MessagingException {
+    public void sendBirthdayEmailUser(String email, String username, LocalDate birthDate) throws MessagingException {
         // Calcular la edad
-        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        int age = calulateAge(birthDate);
 
         // Crear el contexto con los datos dinámicos
         Context context = new Context();
@@ -65,6 +67,32 @@ public class EmailService {
         System.out.println("HTML Content: " + htmlContent);
         // Enviar el correo
         sendMessage(email, "🎉 ¡Feliz cumpleaños, " + username + "!", htmlContent);
+    }
+
+
+    /**
+     * Sends a birthday list email to the user.
+     *
+     * @param email     the email address of the user
+     * @param username  the name of the user
+     * @param birthDate the list of birthdays
+     */
+    public void sendBirthdayListEmail(String email, String username, List<BirthdayResponse> birthDate) throws MessagingException {
+
+        Context context = new Context();
+        context.setVariable("username", username);
+        context.setVariable("birthdays", birthDate);
+        //todo add atribute because we need show random phrase
+        context.setVariable("phrase", getPhrase());
+
+        String htmlContent = templateEngine.process("birthdayList.html", context);
+
+        sendMessage(email, "🎉 ¡Lista mensual de cumpleaños agendados!, " + username + "!", htmlContent);
+    }
+
+
+    private int calulateAge(LocalDate birthDate) {
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
     private String getPhrase() {

@@ -12,4 +12,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u WHERE FUNCTION('DAY', u.bornDate) = :day AND FUNCTION('MONTH', u.bornDate) = :month")
     List<UserEntity> findUsersWithBirthdayToday(@Param("day") int day, @Param("month") int month);
+
+
 }
