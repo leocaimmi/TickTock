@@ -6,6 +6,7 @@ import com.TickTock.TickTock.data.entities.UserEntity;
 import com.TickTock.TickTock.data.mappers.UserMapper;
 import com.TickTock.TickTock.data.repositories.UserRepository;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -79,5 +80,16 @@ public class UserService {
      */
     public List<UserResponse> getAllUsers() {
         return userMapper.toModelList(userRepository.findAll());
+    }
+
+    /**
+     * Get a user by ID.
+     *
+     * @param id the user ID
+     * @return the user response
+     */
+    public UserResponse getUserById(Long id) {
+        return userMapper.toResponse(userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User "+id+" not found")));
     }
 }
