@@ -1,6 +1,7 @@
 package com.TickTock.TickTock.controllers;
 
 import com.TickTock.TickTock.data.dtos.request.UserRequest;
+import com.TickTock.TickTock.data.dtos.response.BirthdayResponse;
 import com.TickTock.TickTock.data.dtos.response.UserResponse;
 import com.TickTock.TickTock.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,10 +83,67 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+
+    @Operation(
+            summary = "Get user information",
+            description = "This endpoint retrieves the details of a specific user by providing their ID in the URL."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User found and successfully returned",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request, unable to process the request",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found, no user exists with the given ID",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Server error, unable to complete the request",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @Operation(
+            summary = "Get user's birthday list",
+            description = "[Test first, later it will be automatic each month] This endpoint returns the birthday list of a specific user. The user ID is provided as a query parameter."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Birthday list successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = BirthdayResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request, unable to process the request",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Server error, unable to complete the request",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    @GetMapping("/{id}/birthdays")
+    public ResponseEntity<List<BirthdayResponse>> getBirthdayUsers(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getBirthdayUsers(id));
+    }
 
 }
