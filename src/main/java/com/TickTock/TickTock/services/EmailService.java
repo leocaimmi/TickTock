@@ -1,6 +1,7 @@
 package com.TickTock.TickTock.services;
 
 import com.TickTock.TickTock.data.dtos.response.BirthdayResponse;
+import com.TickTock.TickTock.utils.BirthdayPhraseProvider;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,17 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;  // Thymeleaf
-
+    private final BirthdayPhraseProvider birthdayPhraseProvider;
     /**
      * Constructor for EmailService.
      *
      * @param mailSender the JavaMailSender instance
      */
     @Autowired
-    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
+    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine, BirthdayPhraseProvider birthdayPhraseProvider) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        this.birthdayPhraseProvider = birthdayPhraseProvider;
     }
 
     public void sendMessage(String email, String subject, String text) {
@@ -61,7 +63,7 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("username", username);
         context.setVariable("age", age);
-        context.setVariable("phrase",getPhrase());
+        context.setVariable("phrase",birthdayPhraseProvider.getRandomPhrase());
         // Generar el contenido HTML utilizando Thymeleaf
         String htmlContent = templateEngine.process("birthdayUser.html", context);
         System.out.println("HTML Content: " + htmlContent);
@@ -82,8 +84,7 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("username", username);
         context.setVariable("birthdays", birthDate);
-        //todo add atribute because we need show random phrase
-        context.setVariable("phrase", getPhrase());
+        context.setVariable("phrase", birthdayPhraseProvider); // Injecting bean directly for Thymeleaf and getting a random phrase
 
         String htmlContent = templateEngine.process("birthdayList.html", context);
 
@@ -95,47 +96,7 @@ public class EmailService {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
-    private String getPhrase() {
-        String[] Phrase = {
-                "¡Te deseamos un día increíble lleno de alegría, amor y muchas sonrisas!",
-                "Que cada momento de este día especial esté lleno de felicidad.",
-                "¡Feliz cumpleaños! Que la vida te siga regalando razones para sonreír.",
-                "Hoy celebramos tu vida, tu alegría y todo lo que te hace único.",
-                "¡Que tu día esté repleto de amor, risas y momentos inolvidables!",
 
-                "Felicidades, ahora sos oficialmente un año más sabio… o al menos más experimentado ",
-                "¡Cumplís años pero seguís siendo tan joven como tu contraseña lo diga!",
-                "¡No contés los años, contá las bendiciones (y las porciones de torta)!",
-                "¿Otro año más? Tranquilo, nadie lo va a notar si no lo decís ",
-                "Te deseo un cumpleaños tan increíble como vos… pero sin la parte de los lunes.",
-
-                "Que este nuevo año te traiga crecimiento, luz y caminos nuevos por descubrir.",
-                "El mejor regalo es vivir un año más lleno de sentido. ¡Feliz cumpleaños!",
-                "Hoy no solo cumplís años, cumplís sueños, logros y aprendizajes.",
-                "Que la vida te sorprenda con bendiciones aún más grandes que tus deseos.",
-                "Cada año es una nueva página en tu historia. ¡Hacela épica!",
-
-                "¡Gracias por existir y por dejar tu huella en nuestras vidas! ¡Feliz cumple!",
-                "Celebrar tu cumpleaños es celebrar la suerte de tenerte cerca.",
-                "Que la vida te devuelva con creces todo el amor que das.",
-                "Sos de esas personas que hacen que todo valga la pena. ¡Felicidades!",
-                "Brindo por vos, por tu risa contagiosa y por todo lo que está por venir.",
-
-                "Le deseamos un cumpleaños lleno de éxitos personales y profesionales.",
-                "Que este nuevo año de vida le traiga muchas satisfacciones.",
-                "Un placer compartir el día a día con una persona tan dedicada. ¡Feliz cumpleaños!",
-                "Le deseamos un excelente día y un año aún mejor.",
-                "¡Felicitaciones por un año más de sabiduría y profesionalismo!",
-
-                "Hoy se alinean los planetas para que la pases genial (o al menos eso dice el horóscopo).",
-                "No es magia, es tu cumpleaños… ¡pero igual vamos a celebrarlo como si lo fuera!",
-                "El calendario se puso de fiesta, ¡hoy es tu día!",
-                "Hoy no envejecés… evolucionás. Como un Pokémon. ",
-                "Tu existencia hace que el mundo sea un lugar mejor. Literal."
-        };
-        int randomIndex = (int) (Math.random() * Phrase.length);
-        return Phrase[randomIndex];
-    }
 
 
 }
