@@ -16,5 +16,6 @@ public class BirthdayResponse {
     private LocalDate birthDate; // Fecha de nacimiento
     private Integer turningAge; // edad que cumple o tiene
     private Long userId; // FK del usuario dueño del recordatorio
+    private String phrase; // Frase de cumpleaños
     private Boolean status; // Estado para recordar o no
 }

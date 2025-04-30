@@ -23,7 +23,7 @@
             <td style="padding: 10px;" th:text="${b.name}">Nombre</td>
             <td style="padding: 10px;" th:text="${b.turningAge} + ' años'">Edad</td>
             <td style="padding: 10px;" th:text="${#temporals.format(b.birthDate, 'dd MMM')}">Fecha</td>
-            <td style="padding: 10px; font-style: italic; color: #666;" th:text="${phrase}">Phrase 🎉</td>
+            <td style="padding: 10px; font-style: italic; color: #666;" th:text="${b.phrase}">Phrase 🎉</td>
         </tr>
         </tbody>
     </table>
