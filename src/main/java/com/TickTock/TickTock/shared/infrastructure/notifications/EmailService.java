@@ -81,10 +81,12 @@ public class EmailService {
      */
     public void sendBirthdayListEmail(String email, String username, List<BirthdayResponse> birthDate) throws MessagingException {
 
+        birthDate.forEach(b -> b.setPhrase(birthdayPhraseProvider.getRandomPhrase())); //designated phrase to each birthday
+
         Context context = new Context();
         context.setVariable("username", username);
         context.setVariable("birthdays", birthDate);
-        context.setVariable("phrase", birthdayPhraseProvider); // Injecting bean directly for Thymeleaf and getting a random phrase
+
 
         String htmlContent = templateEngine.process("birthdayList.html", context);
 
