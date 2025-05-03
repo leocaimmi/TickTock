@@ -4,6 +4,7 @@ import com.TickTock.TickTock.birthday.application.dtos.request.BirthdayRequest;
 import com.TickTock.TickTock.birthday.application.dtos.response.BirthdayResponse;
 import com.TickTock.TickTock.birthday.domain.entities.BirthdayEntity;
 import com.TickTock.TickTock.user.domain.entities.UserEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -55,5 +56,13 @@ public class BirthdayMapper {
         return birthdayEntities.stream()
                 .map(this::toModel)
                 .toList();
+    }
+    //Pageable
+    public Page<BirthdayResponse> toModelPage(Page<BirthdayEntity> birthdayResponsePage){
+        if (birthdayResponsePage == null) {
+            return Page.empty();
+        }
+        return birthdayResponsePage
+                .map(this::toModel);
     }
 }

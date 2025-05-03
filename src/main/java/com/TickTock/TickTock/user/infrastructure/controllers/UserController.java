@@ -13,10 +13,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -63,7 +68,7 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Retrieve all users",
+            summary = "Get all users",
             description = "This endpoint returns a list of all registered users in the system."
     )
     @ApiResponses({
@@ -79,8 +84,16 @@ public class UserController {
             )
     })
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<Page<UserResponse>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort)
+    {
+
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
 
@@ -142,7 +155,7 @@ public class UserController {
             )
     })
     @GetMapping("/{id}/birthdays")
-    public ResponseEntity<List<BirthdayResponse>> getBirthdayUsers(@PathVariable Long id) {
+    public ResponseEntity<List<BirthdayResponse>> getBirthdayUsers(@PathVariable Long id) { // Not using Pageable because this method is for testing.
         return ResponseEntity.ok(userService.getBirthdayUsers(id));
     }
 

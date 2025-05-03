@@ -5,6 +5,7 @@ import com.TickTock.TickTock.user.application.dtos.request.UserRequest;
 import com.TickTock.TickTock.user.application.dtos.response.UserResponse;
 import com.TickTock.TickTock.user.domain.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -50,6 +51,14 @@ public class UserMapper {
                 .status(true)
                 .birthdayEntityList(new ArrayList<>())
                 .build();
+    }
+
+    //Pageable
+    public Page<UserResponse> toModelPage(Page<UserEntity> userEntities) {
+        if (userEntities == null) {
+            return Page.empty();
+        }
+        return userEntities.map(this::toResponse);
     }
 
 }
