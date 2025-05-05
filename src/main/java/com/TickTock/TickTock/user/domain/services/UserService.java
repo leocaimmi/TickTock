@@ -28,15 +28,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final UserMapperMapStruct userMapperMapStruct;
+    //private final UserMapperMapStruct userMapperMapStruct;
     private final BirthdayMapper birthdayMapper;
     private final EmailService emailService;
     private final BirthdayRepository birthdayRepository;
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper, UserMapperMapStruct userMapperMapStruct, BirthdayMapper birthdayMapper, EmailService emailService, BirthdayRepository birthdayRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, BirthdayMapper birthdayMapper, EmailService emailService, BirthdayRepository birthdayRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.userMapperMapStruct = userMapperMapStruct;
+        //this.userMapperMapStruct = userMapperMapStruct;
         this.birthdayMapper = birthdayMapper;
         this.emailService = emailService;
         this.birthdayRepository = birthdayRepository;
@@ -49,7 +49,7 @@ public class UserService {
      * @return the created user response
      */
     public UserResponse createUser(UserRequest userRequest) {
-        return userMapperMapStruct.toResponse(userRepository.save(userMapperMapStruct.toEntity(userRequest)));
+        return userMapper.toResponse(userRepository.save(userMapper.toEntity(userRequest)));
     }
 
     /**
@@ -128,7 +128,7 @@ public class UserService {
      * @return a list of user responses
      */
     public Page<UserResponse> getAllUsers(Pageable pageable) {
-        return userMapperMapStruct
+        return userMapper
                 .toModelPage(userRepository.findAll(pageable));
     }
 
