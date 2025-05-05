@@ -3,6 +3,7 @@ package com.TickTock.TickTock.user.domain.services;
 import com.TickTock.TickTock.user.application.dtos.request.UserRequest;
 import com.TickTock.TickTock.birthday.application.dtos.response.BirthdayResponse;
 import com.TickTock.TickTock.user.application.dtos.response.UserResponse;
+import com.TickTock.TickTock.user.application.mappers.UserMapperMapStruct;
 import com.TickTock.TickTock.user.domain.entities.UserEntity;
 import com.TickTock.TickTock.birthday.application.mappers.BirthdayMapper;
 import com.TickTock.TickTock.user.application.mappers.UserMapper;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    //private final UserMapperMapStruct userMapperMapStruct;
     private final BirthdayMapper birthdayMapper;
     private final EmailService emailService;
     private final BirthdayRepository birthdayRepository;
@@ -34,6 +36,7 @@ public class UserService {
     public UserService(UserRepository userRepository, UserMapper userMapper, BirthdayMapper birthdayMapper, EmailService emailService, BirthdayRepository birthdayRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        //this.userMapperMapStruct = userMapperMapStruct;
         this.birthdayMapper = birthdayMapper;
         this.emailService = emailService;
         this.birthdayRepository = birthdayRepository;
