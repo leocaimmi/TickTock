@@ -1,6 +1,7 @@
 package com.TickTock.TickTock.user.domain.entities;
 
 import com.TickTock.TickTock.birthday.domain.entities.BirthdayEntity;
+import com.TickTock.TickTock.security.domain.entities.CredentialEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -24,7 +25,6 @@ public class UserEntity {
 
     private String username;
 
-
     private LocalDate bornDate;
 
     @Email
@@ -33,5 +33,8 @@ public class UserEntity {
     private Boolean status;
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private List<BirthdayEntity> birthdayEntityList;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CredentialEntity credential;
 
 }

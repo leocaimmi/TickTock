@@ -2,6 +2,7 @@ package com.TickTock.TickTock.user.application.dtos.response;
 
 
 import com.TickTock.TickTock.birthday.application.dtos.response.BirthdayResponse;
+import com.TickTock.TickTock.shared.infrastructure.utils.Role;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class UserResponse {
     private LocalDate bornDate;
     private Boolean status;
     private List<BirthdayResponse> birthdayResponseList;
+    private Role role;
 
 
 }

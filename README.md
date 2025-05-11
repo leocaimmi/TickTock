@@ -11,6 +11,7 @@
 - 🌱 Uso de variables de entorno con `dotenv-java`.
 - 🧪 Testing con Spring Boot Starter Test (JUnit/MOCKITO en el futuro).
 - 🖥️ Plantillas visuales con Thymeleaf para correos.
+- 🔒 Autenticación y autorización con JWT.
 
 ## 🔧 Diseño y patrones aplicados
 
@@ -23,6 +24,8 @@ Este proyecto sigue un enfoque didáctico y experimental para practicar distinta
 - **Validaciones declarativas** con `spring-boot-starter-validation` para asegurar la consistencia de los datos.
 - **Paginación y DTOs** para devolver respuestas limpias y optimizadas en las API.
 - **Manejo centralizado de errores** mediante un `GlobalExceptionHandler` para mejorar la gestión de excepciones en toda la aplicación.
+- **Arquitectura hexagonal** para separar la lógica de negocio.
+- **Autenticación con JWT** para proteger los endpoints y garantizar la seguridad de los datos.
 
 
 ## 🛠️ Tecnologías utilizadas
@@ -39,6 +42,8 @@ Este proyecto sigue un enfoque didáctico y experimental para practicar distinta
 | Thymeleaf            | Plantillas HTML para emails               |
 | Spring Boot Mail Sender  | Envío de correos electrónicos automáticos|
 | dotenv-java          | Variables de entorno                      |
+| Spring Security      | Seguridad de la aplicación                |
+| JWT                  | JSON Web Tokens para autenticación        |
 
 
 # Estructura del proyecto
@@ -70,6 +75,7 @@ com.TickTock.TickTock
 ├── config
 │   └── SwaggerConfig.java
 │
+│
 ├── shared
 │   ├── application
 │   │   └── dtos
@@ -78,8 +84,11 @@ com.TickTock.TickTock
 │   └── infrastructure
 │       ├── exceptions
 │       │   └── GlobalExceptionHandler.java
-│       └── notifications
-│           └── EmailService.java
+│       ├── notifications
+│       │   └── EmailService.java
+│       └── utils
+│           └── Role.java  
+│    
 │
 ├── user
 │   ├── application
