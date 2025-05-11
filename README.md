@@ -115,7 +115,12 @@ com.TickTock.TickTock
 │
 └── resources
     ├──templates
-    │    ├── BirthdayList.html
-    │    └── BirthdayUser.html
+    │   ├── error
+    │   │    │── AccesoDenegado.html
+    │   │    └── NoAutorizado.html
+    │   │
+    │   ├── BirthdayList.html
+    │   └── BirthdayUser.html
+    │
     └── application.properties
 ```
